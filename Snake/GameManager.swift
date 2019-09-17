@@ -14,7 +14,7 @@ class GameManager {
     var nextTime: Double?
     var timeExtension: Double = 0.25
     
-    var playerDirection: PlayerDirection = .down
+    var playerDirection: PlayerDirection = .up
     var currentScore: Int = 0
     init(scene: GameScene) {
         self.scene = scene
@@ -69,12 +69,13 @@ class GameManager {
     func update(time: Double) {
         guard let nTime = nextTime else { return nextTime = time + timeExtension }
         if time >= nTime {
-            print(time)
             nextTime = time + timeExtension
             updatePlayerPosition()
             checkForScore()
+            checkForDeath()
         }
     }
+    
     private func checkForScore() {
         if scene.scorePosition != nil {
             let x = scene.playerPosition[0].0
@@ -92,7 +93,9 @@ class GameManager {
     func swipe(swapDirection: PlayerDirection) {
         if !(swapDirection == .down && playerDirection == .up) && !(swapDirection == .up && playerDirection == .down) {
             if !(swapDirection == .left && playerDirection == .right) && !(swapDirection == .right && playerDirection == .left) {
-                playerDirection = swapDirection
+                if playerDirection != .dead {
+                    playerDirection = swapDirection
+                }
             }
         }
     }
@@ -117,6 +120,10 @@ class GameManager {
         case .down:
             xChange = 0
             yChange = 1
+            break
+        case .dead:
+            xChange = 0
+            yChange = 0
             break
         }
         if scene.playerPosition.count > 0 {
@@ -143,6 +150,18 @@ class GameManager {
         
         renderChange()
     }
+    
+    private func checkForDeath() {
+        if scene.playerPosition.count > 0 {
+            var arrayOfPositions = scene.playerPosition
+            let headOfSnake = arrayOfPositions[0]
+            print("HeadSnake -> \(headOfSnake)")
+            arrayOfPositions.remove(at: 0)
+            if contains(a: arrayOfPositions, v: headOfSnake) {
+                playerDirection = .dead
+            }
+        }
+    }
 }
 
 enum PlayerDirection {
@@ -150,4 +169,5 @@ enum PlayerDirection {
     case right
     case up
     case down
+    case dead
 }
