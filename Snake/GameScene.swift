@@ -84,7 +84,7 @@ class GameScene: SKScene {
         bestScore.zPosition = 1
         bestScore.position = CGPoint(x: 0, y: gameLogo.position.y - 50)
         bestScore.fontSize = 40
-        bestScore.text = "Best Score: 0"
+        bestScore.text = "Best Score: \(UserDefaults.standard.integer(forKey: "bestScore"))"
         bestScore.fontColor = SKColor.white
         self.addChild(bestScore)
     }
@@ -127,7 +127,6 @@ class GameScene: SKScene {
         gameLogo.run(SKAction.move(by: CGVector(dx: -50, dy: 600), duration: 0.5)) {
          self.gameLogo.isHidden = true
         }
-        
         playButton.run(SKAction.scale(to: 0, duration: 0.3)) {
             self.playButton.isHidden = true
         }
@@ -167,7 +166,7 @@ class GameScene: SKScene {
     func gameBackgroundConstraints(width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: -width / 2, y: -height / 2, width: width, height: height)
         gameBackGround = SKShapeNode(rect: rect, cornerRadius: 0.02)
-        gameBackGround.fillColor = SKColor.darkGray
+        gameBackGround.fillColor = SKColor.black
         gameBackGround.zPosition = 2
         gameBackGround.isHidden = true
         self.addChild(gameBackGround)
@@ -182,7 +181,7 @@ class GameScene: SKScene {
         for i in 0...numRows - 1 {
             for j in 0...numCols - 1 {
                 let cellNode = SKShapeNode(rectOf: CGSize(width: cellWidth, height: cellWidth))
-                cellNode.strokeColor = SKColor.black
+                cellNode.strokeColor = .clear
                 cellNode.zPosition = 2
                 cellNode.position = CGPoint(x: x, y: y)
                 gameCell.append((node: cellNode, x: i, y: j))

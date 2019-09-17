@@ -14,16 +14,16 @@ class GameManager {
     var nextTime: Double?
     var timeExtension: Double = 0.25
     
-    var playerDirection: PlayerDirection = .up
+    var playerDirection: PlayerDirection = .down
     var currentScore: Int = 0
     init(scene: GameScene) {
         self.scene = scene
     }
     
     func initGame() {
-        scene.playerPosition.append((10, 11))
-        scene.playerPosition.append((11, 11))
         scene.playerPosition.append((12, 11))
+        scene.playerPosition.append((11, 11))
+        scene.playerPosition.append((10, 11))
         renderChange()
         generateNewPoint()
     }
@@ -175,6 +175,7 @@ class GameManager {
             }
             if hasFinished {
                 print("end game")
+                updateScore()
                 playerDirection = .down
                 //animation has completed
                 scene.scorePosition = nil
@@ -195,6 +196,15 @@ class GameManager {
                 }
             }
         }
+    }
+    
+    private func updateScore() {
+        if currentScore > UserDefaults.standard.integer(forKey: "bestScore") {
+            UserDefaults.standard.set(currentScore, forKey: "bestScore")
+        }
+        currentScore = 0
+        scene.currentScore.text = "Score: 0"
+        scene.bestScore.text = "Best Score: \(UserDefaults.standard.integer(forKey: "bestScore"))"
     }
 }
 
